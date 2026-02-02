@@ -193,33 +193,37 @@ function validateComponentProps(
         continue;
       }
 
-      const propDeclaration = prop.valueDeclaration;
-      if (propDeclaration) {
-        const propNode = services.tsNodeToESTreeNodeMap.get(propDeclaration);
-        if (propNode) {
-          context.report({
-            node: propNode,
-            messageId: 'functionNotServerAction',
-            data: {
-              propName,
-            },
-          });
-        }
-      }
+      reportInvalidProp(
+        prop,
+        propName,
+        'functionNotServerAction',
+        services,
+        context
+      );
     } else if (isClassType(propType, checker)) {
-      const propDeclaration = prop.valueDeclaration;
-      if (propDeclaration) {
-        const propNode = services.tsNodeToESTreeNodeMap.get(propDeclaration);
-        if (propNode) {
-          context.report({
-            node: propNode,
-            messageId: 'invalidProp',
-            data: {
-              propName,
-            },
-          });
-        }
-      }
+      reportInvalidProp(prop, propName, 'invalidProp', services, context);
+    }
+  }
+}
+
+function reportInvalidProp(
+  prop: ts.Symbol,
+  propName: string,
+  messageId: MessageIds,
+  services: ReturnType<typeof ESLintUtils.getParserServices>,
+  context: Readonly<TSESLint.RuleContext<MessageIds, Options>>
+): void {
+  const propDeclaration = prop.valueDeclaration;
+  if (propDeclaration) {
+    const propNode = services.tsNodeToESTreeNodeMap.get(propDeclaration);
+    if (propNode) {
+      context.report({
+        node: propNode,
+        messageId,
+        data: {
+          propName,
+        },
+      });
     }
   }
 }
