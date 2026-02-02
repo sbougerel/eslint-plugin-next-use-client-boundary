@@ -331,6 +331,87 @@ ruleTester.run('props-must-be-serializable', rule, {
       `,
       filename: 'component.tsx',
     },
+    // Built-in serializable types should be allowed
+    {
+      name: 'Date prop is allowed',
+      code: `
+        'use client';
+
+        export default function Component(props: { date: Date }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+    },
+    {
+      name: 'Promise prop is allowed',
+      code: `
+        'use client';
+
+        export default function Component(props: { promise: Promise<string> }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+    },
+    {
+      name: 'Map prop is allowed',
+      code: `
+        'use client';
+
+        export default function Component(props: { map: Map<string, number> }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+    },
+    {
+      name: 'Set prop is allowed',
+      code: `
+        'use client';
+
+        export default function Component(props: { set: Set<string> }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+    },
+    {
+      name: 'RegExp prop is allowed',
+      code: `
+        'use client';
+
+        export default function Component(props: { regex: RegExp }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+    },
+    {
+      name: 'Error prop is allowed',
+      code: `
+        'use client';
+
+        export default function Component(props: { error: Error }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+    },
+    {
+      name: 'Built-in typed arrays are allowed',
+      code: `
+        'use client';
+
+        export default function Component(props: {
+          buffer: Uint8Array;
+          data: Int32Array;
+        }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+    },
   ],
 
   invalid: [
@@ -425,6 +506,49 @@ ruleTester.run('props-must-be-serializable', rule, {
         {
           messageId: 'invalidProp',
           data: { propName: 'notSerializable' },
+        },
+      ],
+    },
+    {
+      name: 'custom class with explicit constructor type',
+      code: `
+        'use client';
+
+        class CustomClass {}
+
+        export default function Component(props: {
+          notSerializable: typeof CustomClass;
+        }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+      errors: [
+        {
+          messageId: 'invalidProp',
+          data: { propName: 'notSerializable' },
+        },
+      ],
+    },
+    {
+      name: 'custom class instance should fail but built-ins pass',
+      code: `
+        'use client';
+
+        class CustomClass {}
+
+        export default function Component(props: {
+          custom: CustomClass;
+          date: Date;
+        }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+      errors: [
+        {
+          messageId: 'invalidProp',
+          data: { propName: 'custom' },
         },
       ],
     },

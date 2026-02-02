@@ -237,18 +237,66 @@ function isFunctionType(type: ts.Type, checker: ts.TypeChecker): boolean {
   return false;
 }
 
+// Built-in types that are serializable in React Server Components
+// Based on: https://react.dev/reference/rsc/use-client#serializable-types
+// Includes types from the Structured Clone Algorithm
+const SERIALIZABLE_BUILT_INS = new Set([
+  'Date',
+  'Map',
+  'Set',
+  'Promise',
+  'RegExp',
+  'Error',
+  'EvalError',
+  'RangeError',
+  'ReferenceError',
+  'SyntaxError',
+  'TypeError',
+  'URIError',
+  'ArrayBuffer',
+  'Int8Array',
+  'Uint8Array',
+  'Uint8ClampedArray',
+  'Int16Array',
+  'Uint16Array',
+  'Int32Array',
+  'Uint32Array',
+  'Float32Array',
+  'Float64Array',
+  'BigInt64Array',
+  'BigUint64Array',
+  'DataView',
+  'Blob',
+  'File',
+  'FileList',
+  'ImageData',
+  'ImageBitmap',
+  'Array',
+  'Object',
+]);
+
 function isClassType(type: ts.Type, checker: ts.TypeChecker): boolean {
+  // Check if it's a constructor type (typeof Class)
   const constructSignatures = type.getConstructSignatures();
   if (constructSignatures.length > 0) {
+    // Check if it's a built-in serializable type
+    if (isSerializableBuiltIn(type)) {
+      return false;
+    }
     return true;
   }
 
+  // Check if it's a class instance type
   const symbol = type.getSymbol();
   if (symbol) {
     const declarations = symbol.getDeclarations();
     if (declarations) {
       for (const declaration of declarations) {
         if (ts.isClassDeclaration(declaration)) {
+          // Check if it's a built-in serializable type
+          if (isSerializableBuiltIn(type)) {
+            return false;
+          }
           return true;
         }
       }
@@ -260,4 +308,14 @@ function isClassType(type: ts.Type, checker: ts.TypeChecker): boolean {
   }
 
   return false;
+}
+
+function isSerializableBuiltIn(type: ts.Type): boolean {
+  const symbol = type.getSymbol();
+  if (!symbol) {
+    return false;
+  }
+
+  const name = symbol.getName();
+  return SERIALIZABLE_BUILT_INS.has(name);
 }
