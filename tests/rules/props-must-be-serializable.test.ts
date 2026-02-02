@@ -207,6 +207,56 @@ ruleTester.run('props-must-be-serializable', rule, {
       `,
       filename: 'component.tsx',
     },
+    // Non-exported components with invalid props should be ignored
+    {
+      name: 'non-exported component with invalid props (not checked)',
+      code: `
+        'use client';
+
+        function InternalComponent(props: { onClick: () => void }) {
+          return null;
+        }
+
+        export default function Component(props: { action: () => void }) {
+          return <InternalComponent onClick={() => {}} />;
+        }
+      `,
+      filename: 'component.tsx',
+    },
+    {
+      name: 'multiple non-exported components with invalid props',
+      code: `
+        'use client';
+
+        const Helper = (props: { onClick: () => void }) => null;
+
+        function AnotherHelper(props: { onChange: (val: string) => void }) {
+          return null;
+        }
+
+        export default function Component(props: { submitAction: () => void }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+    },
+    {
+      name: 'non-exported component with class instance prop',
+      code: `
+        'use client';
+
+        class MyClass {}
+
+        function InternalComponent(props: { instance: MyClass }) {
+          return null;
+        }
+
+        export default function Component(props: { name: string }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+    },
   ],
 
   invalid: [
@@ -402,6 +452,76 @@ ruleTester.run('props-must-be-serializable', rule, {
           onClick: () => void;
           age: number;
         }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+      errors: [
+        {
+          messageId: 'functionNotServerAction',
+          data: { propName: 'onClick' },
+        },
+      ],
+    },
+    // Multiple exported components should all be checked
+    {
+      name: 'multiple exported components both checked',
+      code: `
+        'use client';
+
+        export function ComponentA(props: { onClick: () => void }) {
+          return null;
+        }
+
+        export function ComponentB(props: { onChange: () => void }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+      errors: [
+        {
+          messageId: 'functionNotServerAction',
+          data: { propName: 'onClick' },
+        },
+        {
+          messageId: 'functionNotServerAction',
+          data: { propName: 'onChange' },
+        },
+      ],
+    },
+    // Mix of exported and non-exported components
+    {
+      name: 'exported component checked, non-exported ignored',
+      code: `
+        'use client';
+
+        function InternalHelper(props: { callback: () => void }) {
+          return null;
+        }
+
+        export default function Component(props: { onClick: () => void }) {
+          return <InternalHelper callback={() => {}} />;
+        }
+      `,
+      filename: 'component.tsx',
+      errors: [
+        {
+          messageId: 'functionNotServerAction',
+          data: { propName: 'onClick' },
+        },
+      ],
+    },
+    // Multiple exports with one invalid
+    {
+      name: 'multiple exports with one having invalid props',
+      code: `
+        'use client';
+
+        export function ValidComponent(props: { action: () => void }) {
+          return null;
+        }
+
+        export function InvalidComponent(props: { onClick: () => void }) {
           return null;
         }
       `,
