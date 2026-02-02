@@ -426,6 +426,49 @@ ruleTester.run('props-must-be-serializable', rule, {
       `,
       filename: 'component.tsx',
     },
+    // Optional props with valid types
+    {
+      name: 'Optional action prop is allowed',
+      code: `
+        'use client';
+
+        export default function Component(props: {
+          action?: () => void;
+        }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+    },
+    {
+      name: 'Mixed optional and required serializable props',
+      code: `
+        'use client';
+
+        export default function Component(props: {
+          name: string;
+          age?: number;
+          submitAction?: () => Promise<void>;
+        }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+    },
+    // Generic props with serializable constraints
+    {
+      name: 'Generic component with string constraint',
+      code: `
+        'use client';
+
+        export default function Component<T extends string>(props: {
+          value: T;
+        }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+    },
   ],
 
   invalid: [
@@ -958,6 +1001,104 @@ ruleTester.run('props-must-be-serializable', rule, {
         {
           messageId: 'invalidProp',
           data: { propName: 'value' },
+        },
+      ],
+    },
+    // Optional invalid props should still be detected
+    {
+      name: 'Optional non-action function prop',
+      code: `
+        'use client';
+
+        export default function Component(props: {
+          onClick?: () => void;
+        }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+      errors: [
+        {
+          messageId: 'functionNotServerAction',
+          data: { propName: 'onClick' },
+        },
+      ],
+    },
+    {
+      name: 'Mixed optional required with invalid prop',
+      code: `
+        'use client';
+
+        export default function Component(props: {
+          name: string;
+          submitAction?: () => void;
+          onClick: () => void;
+        }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+      errors: [
+        {
+          messageId: 'functionNotServerAction',
+          data: { propName: 'onClick' },
+        },
+      ],
+    },
+    // Complex union types - reports first invalid type found
+    {
+      name: 'Complex union with multiple invalid types',
+      code: `
+        'use client';
+
+        class MyClass {}
+
+        export default function Component(props: {
+          value: string | (() => void) | MyClass;
+        }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+      errors: [
+        {
+          messageId: 'functionNotServerAction',
+          data: { propName: 'value' },
+        },
+      ],
+    },
+    // Multiple props with various issues
+    {
+      name: 'Multiple props with mixed issues',
+      code: `
+        'use client';
+
+        class CustomClass {}
+
+        export default function Component(props: {
+          name: string;
+          onClick: () => void;
+          submitAction: () => void;
+          instance: CustomClass;
+          onChange?: (val: string) => void;
+          data: Date;
+        }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+      errors: [
+        {
+          messageId: 'functionNotServerAction',
+          data: { propName: 'onClick' },
+        },
+        {
+          messageId: 'invalidProp',
+          data: { propName: 'instance' },
+        },
+        {
+          messageId: 'functionNotServerAction',
+          data: { propName: 'onChange' },
         },
       ],
     },
