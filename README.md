@@ -24,13 +24,12 @@ Add to your ESLint configuration:
 // .eslintrc.js
 module.exports = {
   plugins: ['@serviceup/enforce-use-client'],
-  extends: [
-    'plugin:@serviceup/enforce-use-client/recommended'
-  ]
+  extends: ['plugin:@serviceup/enforce-use-client/recommended'],
 };
 ```
 
 ## Rules
+
 <!-- begin auto-generated rules list -->
 
 | Name                                                                   | Description                                                   |
@@ -90,12 +89,12 @@ The tests verify that both rules correctly identify valid and invalid usage of t
 
 ### Conformance tests
 
-The following code examples all fail the rule for the property `notSerializable`  with the message `Props must be serializable for components in the "use client" entry file. ${propName} is a function that's not a Server Action.`:
+The following code examples all fail the rule for the property `notSerializable` with the message `Props must be serializable for components in the "use client" entry file. ${propName} is a function that's not a Server Action.`:
 
-``` typescript
+```typescript
 'use client';
 
- // Fails below at '() => void', ${propName} is 'notSerializable'
+// Fails below at '() => void', ${propName} is 'notSerializable'
 export default function Component(props: { notSerializable: () => void }) {
   return null;
 }
@@ -103,27 +102,27 @@ export default function Component(props: { notSerializable: () => void }) {
 
 Whenever the check above fails, the linter should provide the following additional details for the failed check:
 
-``` typescript
+```typescript
 `Rename "${propName}" either to "action" or have its name end with "Action" e.g. "${propName}Action" to indicate it is a Server Action.`,
 ```
 
-The following code examples all fail the rule for the property `notSerializable`  with the message `Props must be serializable for components in the "use client" entry file, ${propName} is invalid.`:
+The following code examples all fail the rule for the property `notSerializable` with the message `Props must be serializable for components in the "use client" entry file, ${propName} is invalid.`:
 
-``` typescript
+```typescript
 'use client';
 
-class ClassName {};
+class ClassName {}
 
- // Fails below at 'ClassName', ${propName} is 'notSerializable'
+// Fails below at 'ClassName', ${propName} is 'notSerializable'
 export default function Component(props: { notSerializable: ClassName }) {
   return null;
 }
 ```
 
-``` typescript
+```typescript
 'use client';
 
-type Class<T> = new (...args: any[]) => T
+type Class<T> = new (...args: any[]) => T;
 
 export default function Component(props: {
   // Fails below at 'Class<String>', ${propName} is 'notSerializable'
@@ -137,7 +136,7 @@ No additional information is provided when this check fails.
 
 The following code examples will pass the rule, however:
 
-``` typescript
+```typescript
 'use client';
 
 export default function Component(props: { propNamedAction: () => void }) {
@@ -145,7 +144,7 @@ export default function Component(props: { propNamedAction: () => void }) {
 }
 ```
 
-``` typescript
+```typescript
 'use client';
 
 export default function Component(props: { action: () => void }) {
@@ -153,7 +152,7 @@ export default function Component(props: { action: () => void }) {
 }
 ```
 
-``` typescript
+```typescript
 // If the file name is /[\\/]error\.tsx?$/ or /[\\/]global-error\.tsx?$/
 'use client';
 

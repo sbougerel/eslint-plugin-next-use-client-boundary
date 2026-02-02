@@ -51,14 +51,20 @@ export default createRule<Options, MessageIds>({
       ExportDefaultDeclaration(node) {
         if (!hasUseClientDirective) return;
 
-        let functionNode: TSESTree.FunctionDeclaration | TSESTree.ArrowFunctionExpression | null = null;
+        let functionNode:
+          | TSESTree.FunctionDeclaration
+          | TSESTree.ArrowFunctionExpression
+          | null = null;
 
         if (node.declaration.type === 'FunctionDeclaration') {
           functionNode = node.declaration;
         } else if (node.declaration.type === 'Identifier') {
           // Handle: const Comp = () => {}; export default Comp;
           // We need to find the variable declaration
-          const variable = findVariableDeclaration(node.declaration.name, sourceCode.ast);
+          const variable = findVariableDeclaration(
+            node.declaration.name,
+            sourceCode.ast
+          );
           if (variable && variable.init) {
             if (variable.init.type === 'ArrowFunctionExpression') {
               functionNode = variable.init;
@@ -94,7 +100,10 @@ export default createRule<Options, MessageIds>({
         // Handle: export { Component }
         else if (node.specifiers.length > 0) {
           for (const specifier of node.specifiers) {
-            if (specifier.type === 'ExportSpecifier' && specifier.local.type === 'Identifier') {
+            if (
+              specifier.type === 'ExportSpecifier' &&
+              specifier.local.type === 'Identifier'
+            ) {
               const variable = findVariableDeclaration(
                 specifier.local.name,
                 sourceCode.ast
@@ -141,7 +150,6 @@ function validateComponentProps(
   context: any,
   filename: string
 ) {
-  // Get the first parameter (props)
   if (functionNode.params.length === 0) {
     return;
   }
@@ -151,34 +159,35 @@ function validateComponentProps(
     return;
   }
 
-  // Get TypeScript parser services
   const services = ESLintUtils.getParserServices(context);
   const checker = services.program.getTypeChecker();
   const tsNode = services.esTreeNodeToTSNodeMap.get(propsParam);
 
-  // Get the type of the props parameter
   const type = checker.getTypeAtLocation(tsNode);
 
-  // Check each property in the props type
   const properties = type.getProperties();
-
   for (const prop of properties) {
     const propName = prop.getName();
     const propType = checker.getTypeOfSymbolAtLocation(prop, tsNode);
 
-    // Check if it's a function type
     if (isFunctionType(propType, checker)) {
-      // Allow if propName is 'action' or ends with 'Action'
+      // Allow if propName is 'action' or ends with 'Action'. See reference
+      // implementation for more information:
+      // https://github.com/vercel/next.js/blob/canary/packages/next/src/server/typescript/rules/client-boundary.ts
       if (propName === 'action' || /Action$/.test(propName)) {
         continue;
       }
 
-      // Allow 'reset' in error files
-      if (propName === 'reset' && /[\\/](global-)?error\.tsx?$/.test(filename)) {
+      // Allow 'reset' in error files, see Next. See reference implementation
+      // for more information:
+      // https://github.com/vercel/next.js/blob/canary/packages/next/src/server/typescript/rules/client-boundary.ts
+      if (
+        propName === 'reset' &&
+        /[\\/](global-)?error\.tsx?$/.test(filename)
+      ) {
         continue;
       }
 
-      // Report function that's not a server action
       const propDeclaration = prop.valueDeclaration;
       if (propDeclaration) {
         const propNode = services.tsNodeToESTreeNodeMap.get(propDeclaration);
@@ -192,9 +201,7 @@ function validateComponentProps(
           });
         }
       }
-    }
-    // Check if it's a class type
-    else if (isClassType(propType, checker)) {
+    } else if (isClassType(propType, checker)) {
       const propDeclaration = prop.valueDeclaration;
       if (propDeclaration) {
         const propNode = services.tsNodeToESTreeNodeMap.get(propDeclaration);
@@ -213,13 +220,11 @@ function validateComponentProps(
 }
 
 function isFunctionType(type: ts.Type, checker: ts.TypeChecker): boolean {
-  // Check for function signatures
   const signatures = type.getCallSignatures();
   if (signatures.length > 0) {
     return true;
   }
 
-  // Check if it's a union type and any member is a function
   if (type.isUnion()) {
     return type.types.some(t => isFunctionType(t, checker));
   }
@@ -228,13 +233,11 @@ function isFunctionType(type: ts.Type, checker: ts.TypeChecker): boolean {
 }
 
 function isClassType(type: ts.Type, checker: ts.TypeChecker): boolean {
-  // Check for constructor signatures (class constructors)
   const constructSignatures = type.getConstructSignatures();
   if (constructSignatures.length > 0) {
     return true;
   }
 
-  // Check if the type symbol is a class
   const symbol = type.getSymbol();
   if (symbol) {
     const declarations = symbol.getDeclarations();
@@ -247,7 +250,6 @@ function isClassType(type: ts.Type, checker: ts.TypeChecker): boolean {
     }
   }
 
-  // Check if it's a union type and any member is a class
   if (type.isUnion()) {
     return type.types.some(t => isClassType(t, checker));
   }

@@ -13,6 +13,7 @@ In Next.js applications, components marked with `'use client'` can receive props
 ### Exceptions
 
 The rule allows:
+
 - Functions named `action` or ending with `Action` (considered Server Actions)
 - Functions named `reset` in `error.tsx` or `global-error.tsx` files (Next.js error boundary convention)
 
