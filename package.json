@@ -1,0 +1,52 @@
+{
+  "name": "@sbougerel/eslint-plugin-next-use-client-boundary",
+  "version": "0.1.0",
+  "description": "ESLint plugin to enforce serializable props in Next.js 'use client' components",
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "eslint-plugin",
+    "nextjs",
+    "next",
+    "react",
+    "typescript",
+    "use-client",
+    "serializable"
+  ],
+  "author": "Sylvain Bougerel",
+  "license": "MIT",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "lib",
+    "docs"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "docs:check": "eslint-doc-generator --check",
+    "docs:generate": "eslint-doc-generator"
+  },
+  "dependencies": {
+    "@typescript-eslint/utils": "^8.52.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.2.0",
+    "@typescript-eslint/parser": "^8.52.0",
+    "@typescript-eslint/rule-tester": "^8.52.0",
+    "eslint": "^9.27.0",
+    "eslint-doc-generator": "^1.7.1",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.4"
+  },
+  "peerDependencies": {
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^9.0.0",
+    "typescript": ">=5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
