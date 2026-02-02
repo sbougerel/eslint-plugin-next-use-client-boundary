@@ -7,10 +7,6 @@ const plugin = {
   },
   rules,
   configs: {
-    recommended: {
-      plugins: ['@sbougerel/next-use-client-boundary'],
-      rules: {},
-    },
     'recommended-type-checked': {
       plugins: ['@sbougerel/next-use-client-boundary'],
       rules: {
