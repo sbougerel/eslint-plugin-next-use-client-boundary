@@ -76,6 +76,18 @@ Nextjs' reference implementation for this plugin has some differences:
 
 The rule automatically skips test files (files with names containing `.test.` or `.spec.`).
 
+## Known Limitations
+
+- **Nested scope exports**: The rule only searches for variable declarations in the top-level program scope. Variables declared in nested scopes (like within block statements) and then exported are not validated. This pattern is extremely rare in practice:
+
+  ```typescript
+  'use client';
+  {
+    const Component = (props: Props) => {}; // Not validated
+    export { Component };
+  }
+  ```
+
 ## Requirements
 
 - ESLint 9.0.0 or higher
