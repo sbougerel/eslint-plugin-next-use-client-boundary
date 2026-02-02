@@ -18,27 +18,38 @@ pnpm add --save-dev @serviceup/eslint-plugin-next-use-client-boundary
 
 ## Usage
 
-Add to your ESLint configuration:
+This plugin requires TypeScript type information to function properly. Add to your ESLint configuration:
 
 ```javascript
-// .eslintrc.js
-module.exports = {
-  plugins: ['@serviceup/enforce-use-client'],
-  extends: ['plugin:@serviceup/enforce-use-client/recommended'],
-};
+// eslint.config.js (ESLint 9+)
+import nextUseClientBoundary from '@sbougerel/eslint-plugin-next-use-client-boundary';
+import tseslint from 'typescript-eslint';
+
+export default tseslint.config(
+  {
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+  nextUseClientBoundary.configs['recommended-type-checked']
+);
 ```
+
+**Note:** This plugin only provides a `recommended-type-checked` configuration because the rule requires TypeScript's type checker to analyze prop types. See the [TypeScript ESLint typed linting documentation](https://typescript-eslint.io/getting-started/typed-linting/) for more information on setting up type-aware linting.
 
 ## Rules
 
 <!-- begin auto-generated rules list -->
 
 💼 Configurations enabled in.\
-✅ Set in the `recommended` configuration.\
 ☑️ Set in the `recommended-type-checked` configuration.
 
-| Name                                                                   | Description                                                   | 💼   |
-| :--------------------------------------------------------------------- | :------------------------------------------------------------ | :--- |
-| [props-must-be-serializable](docs/rules/props-must-be-serializable.md) | Enforce serializable props in Next.js "use client" components | ✅ ☑️ |
+| Name                                                                   | Description                                                   | 💼 |
+| :--------------------------------------------------------------------- | :------------------------------------------------------------ | :- |
+| [props-must-be-serializable](docs/rules/props-must-be-serializable.md) | Enforce serializable props in Next.js "use client" components | ☑️ |
 
 <!-- end auto-generated rules list -->
 
@@ -63,7 +74,7 @@ Nextjs' reference implementation for this plugin has some differences:
 
 ## Configuration
 
-Both rules automatically skip test files (files with names containing `.test.` or `.spec.`).
+The rule automatically skips test files (files with names containing `.test.` or `.spec.`).
 
 ## Requirements
 

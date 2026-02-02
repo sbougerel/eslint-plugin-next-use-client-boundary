@@ -9,10 +9,7 @@ const plugin = {
   configs: {
     recommended: {
       plugins: ['@sbougerel/next-use-client-boundary'],
-      rules: {
-        '@sbougerel/next-use-client-boundary/props-must-be-serializable':
-          'error',
-      },
+      rules: {},
     },
     'recommended-type-checked': {
       plugins: ['@sbougerel/next-use-client-boundary'],
