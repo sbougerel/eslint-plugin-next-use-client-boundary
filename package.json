@@ -23,6 +23,8 @@
   ],
   "scripts": {
     "build": "tsc",
+    "clean": "rm -rf lib",
+    "purge": "rm -rf node_modules",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint .",
