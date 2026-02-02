@@ -155,7 +155,10 @@ function validateComponentProps(
   }
 
   const propsParam = functionNode.params[0];
-  if (propsParam.type !== 'Identifier') {
+
+  // Support both regular props and destructured props
+  // e.g., (props: Props) or ({ action, onClick }: Props)
+  if (propsParam.type !== 'Identifier' && propsParam.type !== 'ObjectPattern') {
     return;
   }
 

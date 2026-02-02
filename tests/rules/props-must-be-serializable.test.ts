@@ -257,6 +257,57 @@ ruleTester.run('props-must-be-serializable', rule, {
       `,
       filename: 'component.tsx',
     },
+    // Destructured props - valid cases
+    {
+      name: 'destructured props with action',
+      code: `
+        'use client';
+
+        export default function Component({ action }: { action: () => void }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+    },
+    {
+      name: 'destructured props with submitAction',
+      code: `
+        'use client';
+
+        export default function Component({ submitAction }: { submitAction: () => void }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+    },
+    {
+      name: 'destructured props with serializable types',
+      code: `
+        'use client';
+
+        export default function Component({ name, age }: { name: string; age: number }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+    },
+    {
+      name: 'destructured props with mixed valid types',
+      code: `
+        'use client';
+
+        export default function Component({
+          name,
+          submitAction
+        }: {
+          name: string;
+          submitAction: () => void
+        }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+    },
   ],
 
   invalid: [
@@ -522,6 +573,99 @@ ruleTester.run('props-must-be-serializable', rule, {
         }
 
         export function InvalidComponent(props: { onClick: () => void }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+      errors: [
+        {
+          messageId: 'functionNotServerAction',
+          data: { propName: 'onClick' },
+        },
+      ],
+    },
+    // Destructured props - invalid cases
+    {
+      name: 'destructured props with invalid function',
+      code: `
+        'use client';
+
+        export default function Component({ onClick }: { onClick: () => void }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+      errors: [
+        {
+          messageId: 'functionNotServerAction',
+          data: { propName: 'onClick' },
+        },
+      ],
+    },
+    {
+      name: 'destructured props with multiple invalid functions',
+      code: `
+        'use client';
+
+        export default function Component({
+          onClick,
+          onChange
+        }: {
+          onClick: () => void;
+          onChange: (val: string) => void
+        }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+      errors: [
+        {
+          messageId: 'functionNotServerAction',
+          data: { propName: 'onClick' },
+        },
+        {
+          messageId: 'functionNotServerAction',
+          data: { propName: 'onChange' },
+        },
+      ],
+    },
+    {
+      name: 'destructured props with class instance',
+      code: `
+        'use client';
+
+        class MyClass {}
+
+        export default function Component({
+          instance
+        }: {
+          instance: MyClass
+        }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+      errors: [
+        {
+          messageId: 'invalidProp',
+          data: { propName: 'instance' },
+        },
+      ],
+    },
+    {
+      name: 'destructured props with mixed valid and invalid',
+      code: `
+        'use client';
+
+        export default function Component({
+          name,
+          submitAction,
+          onClick
+        }: {
+          name: string;
+          submitAction: () => void;
+          onClick: () => void
+        }) {
           return null;
         }
       `,
