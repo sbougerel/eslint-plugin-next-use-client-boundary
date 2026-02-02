@@ -1,6 +1,6 @@
 {
   "name": "@sbougerel/eslint-plugin-next-use-client-boundary",
-  "version": "0.3.0-0",
+  "version": "0.3.0-1",
   "description": "ESLint plugin to enforce serializable props in Next.js 'use client' components",
   "keywords": [
     "eslint",
