@@ -243,6 +243,10 @@ function isFunctionType(type: ts.Type, checker: ts.TypeChecker): boolean {
     return type.types.some(t => isFunctionType(t, checker));
   }
 
+  if (type.isIntersection()) {
+    return type.types.some(t => isFunctionType(t, checker));
+  }
+
   return false;
 }
 
@@ -313,6 +317,10 @@ function isClassType(type: ts.Type, checker: ts.TypeChecker): boolean {
   }
 
   if (type.isUnion()) {
+    return type.types.some(t => isClassType(t, checker));
+  }
+
+  if (type.isIntersection()) {
     return type.types.some(t => isClassType(t, checker));
   }
 

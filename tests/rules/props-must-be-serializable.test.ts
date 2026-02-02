@@ -412,6 +412,20 @@ ruleTester.run('props-must-be-serializable', rule, {
       `,
       filename: 'component.tsx',
     },
+    // Union types with valid components
+    {
+      name: 'Union type with serializable types',
+      code: `
+        'use client';
+
+        export default function Component(props: {
+          value: string | number | Date;
+        }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+    },
   ],
 
   invalid: [
@@ -858,6 +872,92 @@ ruleTester.run('props-must-be-serializable', rule, {
         {
           messageId: 'functionNotServerAction',
           data: { propName: 'onClick' },
+        },
+      ],
+    },
+    // Intersection types with functions should be detected
+    {
+      name: 'Intersection type with function component',
+      code: `
+        'use client';
+
+        type WithMeta = { meta: string };
+        type Handler = () => void;
+
+        export default function Component(props: {
+          callback: Handler & WithMeta;
+        }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+      errors: [
+        {
+          messageId: 'functionNotServerAction',
+          data: { propName: 'callback' },
+        },
+      ],
+    },
+    {
+      name: 'Intersection type with class should be detected',
+      code: `
+        'use client';
+
+        class MyClass {}
+        type WithId = { id: string };
+
+        export default function Component(props: {
+          instance: MyClass & WithId;
+        }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+      errors: [
+        {
+          messageId: 'invalidProp',
+          data: { propName: 'instance' },
+        },
+      ],
+    },
+    // Union types with invalid components should be detected
+    {
+      name: 'Union type with function should be detected',
+      code: `
+        'use client';
+
+        export default function Component(props: {
+          callback: string | (() => void);
+        }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+      errors: [
+        {
+          messageId: 'functionNotServerAction',
+          data: { propName: 'callback' },
+        },
+      ],
+    },
+    {
+      name: 'Union type with class should be detected',
+      code: `
+        'use client';
+
+        class MyClass {}
+
+        export default function Component(props: {
+          value: string | MyClass;
+        }) {
+          return null;
+        }
+      `,
+      filename: 'component.tsx',
+      errors: [
+        {
+          messageId: 'invalidProp',
+          data: { propName: 'value' },
         },
       ],
     },
