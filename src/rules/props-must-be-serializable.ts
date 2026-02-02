@@ -86,14 +86,16 @@ export default createRule<Options, MessageIds>({
         if (node.declaration?.type === 'FunctionDeclaration') {
           validateComponentProps(node.declaration, context, filename);
         }
-        // Handle: export const Component = () => {}
+        // Handle: export const Component = () => {} or export const Component = function() {}
         else if (node.declaration?.type === 'VariableDeclaration') {
           for (const declarator of node.declaration.declarations) {
-            if (
-              declarator.init &&
-              declarator.init.type === 'ArrowFunctionExpression'
-            ) {
-              validateComponentProps(declarator.init, context, filename);
+            if (declarator.init) {
+              if (
+                declarator.init.type === 'ArrowFunctionExpression' ||
+                declarator.init.type === 'FunctionExpression'
+              ) {
+                validateComponentProps(declarator.init, context, filename);
+              }
             }
           }
         }

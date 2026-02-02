@@ -191,6 +191,29 @@ ruleTester.run('props-must-be-serializable', rule, {
       `,
       filename: 'component.tsx',
     },
+    // Function expression exports
+    {
+      name: 'function expression with action',
+      code: `
+        'use client';
+
+        export const Component = function(props: { action: () => void }) {
+          return null;
+        };
+      `,
+      filename: 'component.tsx',
+    },
+    {
+      name: 'function expression with serializable props',
+      code: `
+        'use client';
+
+        export const Component = function(props: { name: string; age: number }) {
+          return null;
+        };
+      `,
+      filename: 'component.tsx',
+    },
     // Multiple valid actions
     {
       name: 'multiple action props',
@@ -456,6 +479,43 @@ ruleTester.run('props-must-be-serializable', rule, {
         {
           messageId: 'functionNotServerAction',
           data: { propName: 'onChange' },
+        },
+      ],
+    },
+    // Function expression with invalid props
+    {
+      name: 'function expression with invalid function prop',
+      code: `
+        'use client';
+
+        export const Component = function(props: { onClick: () => void }) {
+          return null;
+        };
+      `,
+      filename: 'component.tsx',
+      errors: [
+        {
+          messageId: 'functionNotServerAction',
+          data: { propName: 'onClick' },
+        },
+      ],
+    },
+    {
+      name: 'function expression with class instance',
+      code: `
+        'use client';
+
+        class MyClass {}
+
+        export const Component = function(props: { instance: MyClass }) {
+          return null;
+        };
+      `,
+      filename: 'component.tsx',
+      errors: [
+        {
+          messageId: 'invalidProp',
+          data: { propName: 'instance' },
         },
       ],
     },
