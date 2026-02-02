@@ -6,11 +6,11 @@
 version: 2
 
 updates:
-  - package-ecosystem: "npm, github-actions"
-    directory: "/" # Location of package manifests
+  - package-ecosystem: 'npm, github-actions'
+    directory: '/' # Location of package manifests
     schedule:
-      interval: "weekly"
-  - package-ecosystem: "github-actions"
-    directory: "/" # Location of package manifests
+      interval: 'weekly'
+  - package-ecosystem: 'github-actions'
+    directory: '/' # Location of package manifests
     schedule:
-      interval: "monthly"
+      interval: 'monthly'
