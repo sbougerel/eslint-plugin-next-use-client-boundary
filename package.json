@@ -17,7 +17,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sbougerel/eslint-plugin-next-use-client-boundary.git"
+    "url": "git+https://github.com/sbougerel/eslint-plugin-next-use-client-boundary.git"
   },
   "bugs": {
     "url": "https://github.com/sbougerel/eslint-plugin-next-use-client-boundary/issues"
