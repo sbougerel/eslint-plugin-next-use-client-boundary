@@ -2,9 +2,44 @@
 
 A Typescript ESLint plugin for Next.js projects that enforces serializable props for exported components in `'use client'` modules. This rule aims to emulate the Next.js Typescript server rule [reference implementation here](https://github.com/vercel/next.js/blob/canary/packages/next/src/server/typescript/rules/client-boundary.ts).
 
-## Description
+## Examples
 
-In Next.js applications, components exported from `'use client'` modules can only accept props that are serializable for client-server communication. This plugin validates prop types at build time to prevent runtime errors.
+### Invalid
+
+```typescript
+'use client';
+
+// ❌ Error: Functions are not serializable
+export function Button({ onClick }: { onClick: () => void }) {
+  return <button onClick={onClick}>Click me</button>;
+}
+
+// ❌ Error: Class instances are not serializable
+export function UserCard({ user }: { user: User }) {
+  return <div>{user.name}</div>;
+}
+```
+
+### Valid
+
+```typescript
+'use client';
+
+// ✅ Server Actions are allowed (name ends with "Action")
+export function Form({ submitAction }: { submitAction: () => Promise<void> }) {
+  return <form action={submitAction}>...</form>;
+}
+
+// ✅ Primitive types and plain objects are serializable
+export function UserCard({ name, age }: { name: string; age: number }) {
+  return <div>{name} is {age} years old</div>;
+}
+
+// ✅ Arrays and nested serializable types are allowed
+export function List({ items }: { items: Array<{ id: string; title: string }> }) {
+  return <ul>{items.map(item => <li key={item.id}>{item.title}</li>)}</ul>;
+}
+```
 
 ## Installation
 
@@ -21,20 +56,23 @@ pnpm add --save-dev @sbougerel/eslint-plugin-next-use-client-boundary
 This plugin requires TypeScript type information to function properly. Add to your ESLint configuration:
 
 ```javascript
-// eslint.config.js (ESLint 9+)
+// eslint.config.mjs
 import nextUseClientBoundary from '@sbougerel/eslint-plugin-next-use-client-boundary';
+import eslint from '@eslint/js';
+import { defineConfig } from 'eslint/config';
 import tseslint from 'typescript-eslint';
 
-export default tseslint.config(
+export default defineConfig(
+  eslint.configs.recommended,
+  tseslint.configs.recommendedTypeChecked,
   {
     languageOptions: {
       parserOptions: {
         projectService: true,
-        tsconfigRootDir: import.meta.dirname,
       },
     },
   },
-  nextUseClientBoundary.configs['recommended-type-checked']
+  nextUseClientBoundary.configs['recommended-type-checked'],
 );
 ```
 
@@ -70,13 +108,11 @@ Next.js' reference implementation for this plugin has some differences:
 - If a function's name is `reset` and the file name is an error file or a global error file, the rule will pass,
 - Symbols that are not registered globally will not fail the rule.
 
-## Configuration
-
 The rule automatically skips test files (files with names containing `.test.` or `.spec.`).
 
 ## Known Limitations
 
-- **Nested scope exports**: The rule only searches for variable declarations in the top-level program scope. Variables declared in nested scopes (like within block statements) and then exported are not validated. This pattern is extremely rare in practice:
+- **Nested scope exports**: The rule only searches for variable declarations in the top-level program scope. Variables declared in nested scopes (like within block statements) and then exported are not validated. This pattern is rare in practice:
 
   ```typescript
   'use client';
