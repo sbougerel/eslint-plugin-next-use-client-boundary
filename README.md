@@ -32,9 +32,13 @@ module.exports = {
 
 <!-- begin auto-generated rules list -->
 
-| Name                                                                   | Description                                                   |
-| :--------------------------------------------------------------------- | :------------------------------------------------------------ |
-| [props-must-be-serializable](docs/rules/props-must-be-serializable.md) | Enforce serializable props in Next.js "use client" components |
+💼 Configurations enabled in.\
+✅ Set in the `recommended` configuration.\
+☑️ Set in the `recommended-type-checked` configuration.
+
+| Name                                                                   | Description                                                   | 💼   |
+| :--------------------------------------------------------------------- | :------------------------------------------------------------ | :--- |
+| [props-must-be-serializable](docs/rules/props-must-be-serializable.md) | Enforce serializable props in Next.js "use client" components | ✅ ☑️ |
 
 <!-- end auto-generated rules list -->
 

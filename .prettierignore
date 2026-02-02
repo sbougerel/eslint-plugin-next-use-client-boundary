@@ -12,3 +12,7 @@ coverage/
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
+
+# Auto-generated documentation
+README.md
+docs/

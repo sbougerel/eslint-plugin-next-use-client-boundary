@@ -1,4 +1,4 @@
-import { ESLintUtils, TSESTree } from '@typescript-eslint/utils';
+import { ESLintUtils, TSESTree, type TSESLint } from '@typescript-eslint/utils';
 import * as ts from 'typescript';
 import { createRule } from '../utils';
 
@@ -147,7 +147,7 @@ function validateComponentProps(
     | TSESTree.FunctionDeclaration
     | TSESTree.ArrowFunctionExpression
     | TSESTree.FunctionExpression,
-  context: any,
+  context: Readonly<TSESLint.RuleContext<MessageIds, Options>>,
   filename: string
 ) {
   if (functionNode.params.length === 0) {

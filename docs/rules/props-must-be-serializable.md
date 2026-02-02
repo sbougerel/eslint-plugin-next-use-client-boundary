@@ -1,4 +1,8 @@
-# Enforce serializable props in Next.js "use client" components (`@sbougerel/next-use-client-boundary/props-must-be-serializable`)
+# @sbougerel/next-use-client-boundary/props-must-be-serializable
+
+📝 Enforce serializable props in Next.js "use client" components.
+
+💼 This rule is enabled in the following configs: ✅ `recommended`, ☑️ `recommended-type-checked`.
 
 <!-- end auto-generated rule header -->
 
