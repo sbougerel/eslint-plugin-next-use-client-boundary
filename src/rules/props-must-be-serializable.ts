@@ -168,6 +168,11 @@ function validateComponentProps(
   const checker = services.program.getTypeChecker();
   const tsNode = services.esTreeNodeToTSNodeMap.get(propsParam);
 
+  // Defensive check: tsNode should always exist but guard against edge cases
+  if (!tsNode) {
+    return;
+  }
+
   const type = checker.getTypeAtLocation(tsNode);
 
   const properties = type.getProperties();
