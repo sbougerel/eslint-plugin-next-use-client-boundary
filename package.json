@@ -15,6 +15,14 @@
   ],
   "author": "Sylvain Bougerel",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sbougerel/eslint-plugin-next-use-client-boundary.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sbougerel/eslint-plugin-next-use-client-boundary/issues"
+  },
+  "homepage": "https://github.com/sbougerel/eslint-plugin-next-use-client-boundary#readme",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "files": [
