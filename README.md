@@ -1,19 +1,19 @@
 # eslint-plugin-next-use-client-boundary
 
-A Typescript ESLint plugin for Next.js projects checking that component entries in `'use client'` modules have serializable properties. This rule aims to emulate the Next.js Typescript server rule [reference implemention here](https://github.com/vercel/next.js/blob/canary/packages/next/src/server/typescript/rules/client-boundary.ts).
+A Typescript ESLint plugin for Next.js projects that enforces serializable props for exported components in `'use client'` modules. This rule aims to emulate the Next.js Typescript server rule [reference implementation here](https://github.com/vercel/next.js/blob/canary/packages/next/src/server/typescript/rules/client-boundary.ts).
 
 ## Description
 
-In Next.js applications, React components can be exported from modules that start with `'use client'` directive.
+In Next.js applications, components exported from `'use client'` modules can only accept props that are serializable for client-server communication. This plugin validates prop types at build time to prevent runtime errors.
 
 ## Installation
 
 ```bash
 npm install --save-dev @sbougerel/eslint-plugin-next-use-client-boundary
 # or
-yarn add --dev @serviceup/eslint-plugin-next-use-client-boundary
+yarn add --dev @sbougerel/eslint-plugin-next-use-client-boundary
 # or
-pnpm add --save-dev @serviceup/eslint-plugin-next-use-client-boundary
+pnpm add --save-dev @sbougerel/eslint-plugin-next-use-client-boundary
 ```
 
 ## Usage
@@ -53,20 +53,18 @@ export default tseslint.config(
 
 <!-- end auto-generated rules list -->
 
-This plugin provides one rule:
-
 ### props-must-be-serializable
 
-React component entries in `'use client'` modules have serializiable properties.
+Enforces serializable props for exported components in `'use client'` modules.
 
-The types that are not supported in [https://react.dev/reference/rsc/use-client#serializable-types](React `'use client'` reference on serializable types) will fail the rule:
+The types that are not supported in [React 'use client' reference on serializable types](https://react.dev/reference/rsc/use-client#serializable-types) will fail the rule:
 
 > - Functions that are not exported from client-marked modules or marked with 'use server'
 > - Classes
 > - Objects that are instances of any class (other than the built-ins mentioned) or objects with a null prototype
 > - Symbols not registered globally, ex. Symbol('my new symbol')
 
-Nextjs' reference implementation for this plugin has some differences:
+Next.js' reference implementation for this plugin has some differences:
 
 - If a function's name is `action` or ends in `Action`, the rule will pass,
 - If a function's name is `reset` and the file name is an error file or a global error file, the rule will pass,
@@ -97,10 +95,6 @@ The rule automatically skips test files (files with names containing `.test.` or
 
 MIT
 
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
 ## Development
 
 ### Running Tests
@@ -112,81 +106,7 @@ npm install
 npm test
 ```
 
-The tests verify that both rules correctly identify valid and invalid usage of the `'use client'` directive.
-
-### Conformance tests
-
-The following code examples all fail the rule for the property `notSerializable` with the message `Props must be serializable for components in the "use client" entry file. ${propName} is a function that's not a Server Action.`:
-
-```typescript
-'use client';
-
-// Fails below at '() => void', ${propName} is 'notSerializable'
-export default function Component(props: { notSerializable: () => void }) {
-  return null;
-}
-```
-
-Whenever the check above fails, the linter should provide the following additional details for the failed check:
-
-```typescript
-`Rename "${propName}" either to "action" or have its name end with "Action" e.g. "${propName}Action" to indicate it is a Server Action.`,
-```
-
-The following code examples all fail the rule for the property `notSerializable` with the message `Props must be serializable for components in the "use client" entry file, ${propName} is invalid.`:
-
-```typescript
-'use client';
-
-class ClassName {}
-
-// Fails below at 'ClassName', ${propName} is 'notSerializable'
-export default function Component(props: { notSerializable: ClassName }) {
-  return null;
-}
-```
-
-```typescript
-'use client';
-
-type Class<T> = new (...args: any[]) => T;
-
-export default function Component(props: {
-  // Fails below at 'Class<String>', ${propName} is 'notSerializable'
-  notSerializable: Class<String>;
-}) {
-  return null;
-}
-```
-
-No additional information is provided when this check fails.
-
-The following code examples will pass the rule, however:
-
-```typescript
-'use client';
-
-export default function Component(props: { propNamedAction: () => void }) {
-  return null;
-}
-```
-
-```typescript
-'use client';
-
-export default function Component(props: { action: () => void }) {
-  return null;
-}
-```
-
-```typescript
-// If the file name is /[\\/]error\.tsx?$/ or /[\\/]global-error\.tsx?$/
-'use client';
-
-export default function Component(props: { reset: () => void }) {
-  return null;
-}
-```
+The tests verify that the rule correctly identifies valid and invalid usage of the `'use client'` directive.
 
 ## References
 
