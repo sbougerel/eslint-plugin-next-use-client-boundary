@@ -1,5 +1,5 @@
 import { RuleTester } from '@typescript-eslint/rule-tester';
-import rule from '../../src/rules/props-must-be-serializable';
+import { propsMustBeSerializable } from '../../src/rules/props-must-be-serializable';
 import { afterAll, describe, it } from 'vitest';
 
 RuleTester.afterAll = afterAll;
@@ -17,7 +17,7 @@ const ruleTester = new RuleTester({
   },
 });
 
-ruleTester.run('props-must-be-serializable', rule, {
+ruleTester.run('props-must-be-serializable', propsMustBeSerializable, {
   valid: [
     // No 'use client' directive
     {

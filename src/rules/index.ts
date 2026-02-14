@@ -1,5 +1,5 @@
-import propsMustBeSerializable from './props-must-be-serializable';
+import { propsMustBeSerializable } from './props-must-be-serializable';
 
-export default {
+export const rules = {
   'props-must-be-serializable': propsMustBeSerializable,
 };

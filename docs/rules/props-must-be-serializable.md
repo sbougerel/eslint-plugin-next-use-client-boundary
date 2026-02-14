@@ -2,7 +2,7 @@
 
 📝 Enforce serializable props in Next.js "use client" components.
 
-💼 This rule is enabled in the ☑️ `recommended-type-checked` config.
+💼 This rule is enabled in the ✅ `recommended` config.
 
 <!-- end auto-generated rule header -->
 

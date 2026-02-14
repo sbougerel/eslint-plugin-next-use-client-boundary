@@ -1,21 +1,27 @@
-import rules from './rules';
+import { rules } from './rules/index';
+
+const { name, version } =
+  // `import`ing here would bypass the TSConfig's `"rootDir": "src"`
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  require('../package.json') as typeof import('../package.json');
 
 const plugin = {
-  meta: {
-    name: '@sbougerel/eslint-plugin-next-use-client-boundary',
-    version: '0.1.0',
-  },
-  rules,
   configs: {
-    'recommended-type-checked': {
-      plugins: ['@sbougerel/next-use-client-boundary'],
-      rules: {
-        '@sbougerel/next-use-client-boundary/props-must-be-serializable':
-          'error',
-      },
+    get recommended() {
+      return recommended;
     },
+  },
+  meta: { name, version },
+  rules,
+};
+
+const recommended = {
+  plugins: {
+    '@sbougerel/next-use-client-boundary': plugin,
+  },
+  rules: {
+    '@sbougerel/next-use-client-boundary/props-must-be-serializable': 'error',
   },
 };
 
-export { rules };
-export default plugin;
+export = plugin;

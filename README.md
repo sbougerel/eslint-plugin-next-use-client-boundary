@@ -69,25 +69,26 @@ export default defineConfig(
     languageOptions: {
       parserOptions: {
         projectService: true,
+        tsconfigRootDir: import.meta.dirname,
       },
     },
   },
-  nextUseClientBoundary.configs['recommended-type-checked'],
+  nextUseClientBoundary.configs.recommended,
 );
 ```
 
-**Note:** This plugin only provides a `recommended-type-checked` configuration because the rule requires TypeScript's type checker to analyze prop types. See the [TypeScript ESLint typed linting documentation](https://typescript-eslint.io/getting-started/typed-linting/) for more information on setting up type-aware linting.
+**Note:** This plugin only provides a `recommended` configuration because the rule requires TypeScript's type checker to analyze prop types. See the [TypeScript ESLint typed linting documentation](https://typescript-eslint.io/getting-started/typed-linting/) for more information on setting up type-aware linting.
 
 ## Rules
 
 <!-- begin auto-generated rules list -->
 
 💼 Configurations enabled in.\
-☑️ Set in the `recommended-type-checked` configuration.
+✅ Set in the `recommended` configuration.
 
 | Name                                                                   | Description                                                   | 💼 |
 | :--------------------------------------------------------------------- | :------------------------------------------------------------ | :- |
-| [props-must-be-serializable](docs/rules/props-must-be-serializable.md) | Enforce serializable props in Next.js "use client" components | ☑️ |
+| [props-must-be-serializable](docs/rules/props-must-be-serializable.md) | Enforce serializable props in Next.js "use client" components | ✅  |
 
 <!-- end auto-generated rules list -->
 

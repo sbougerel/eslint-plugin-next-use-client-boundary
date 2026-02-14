@@ -1,11 +1,11 @@
 import { ESLintUtils, TSESTree, type TSESLint } from '@typescript-eslint/utils';
-import * as ts from 'typescript';
+import ts from 'typescript';
 import { createRule } from '../utils';
 
 type MessageIds = 'functionNotServerAction' | 'invalidProp';
 type Options = [];
 
-export default createRule<Options, MessageIds>({
+export const propsMustBeSerializable = createRule<Options, MessageIds>({
   name: 'props-must-be-serializable',
   meta: {
     type: 'problem',

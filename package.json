@@ -25,6 +25,12 @@
   "homepage": "https://github.com/sbougerel/eslint-plugin-next-use-client-boundary#readme",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    }
+  },
   "files": [
     "lib",
     "docs"
