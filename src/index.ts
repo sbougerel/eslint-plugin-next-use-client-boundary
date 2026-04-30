@@ -1,9 +1,6 @@
 import { rules } from './rules/index';
 
-const { name, version } =
-  // `import`ing here would bypass the TSConfig's `"rootDir": "src"`
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  require('../package.json') as typeof import('../package.json');
+import { name, version } from '../package.json';
 
 const plugin = {
   configs: {
