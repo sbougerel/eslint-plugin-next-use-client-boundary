@@ -31,7 +31,10 @@
       "default": "./lib/index.js"
     }
   },
-  "files": ["lib", "docs"],
+  "files": [
+    "lib",
+    "docs"
+  ],
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf lib",
