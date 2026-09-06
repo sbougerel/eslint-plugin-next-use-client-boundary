@@ -48,18 +48,18 @@
     "docs:generate": "eslint-doc-generator"
   },
   "dependencies": {
-    "@typescript-eslint/utils": "^8.65.0"
+    "@typescript-eslint/utils": "^8.69.0"
   },
   "devDependencies": {
-    "@types/node": "^26.1.2",
-    "@typescript-eslint/eslint-plugin": "^8.65.0",
-    "@typescript-eslint/parser": "^8.65.0",
-    "@typescript-eslint/rule-tester": "^8.65.0",
-    "eslint": "^10.8.0",
-    "eslint-doc-generator": "^3.7.0",
+    "@types/node": "^26.4.1",
+    "@typescript-eslint/eslint-plugin": "^8.69.0",
+    "@typescript-eslint/parser": "^8.69.0",
+    "@typescript-eslint/rule-tester": "^8.69.0",
+    "eslint": "^10.9.1",
+    "eslint-doc-generator": "^3.7.1",
     "prettier": "^3.9.6",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.10"
+    "vitest": "^5.0.0"
   },
   "peerDependencies": {
     "@typescript-eslint/parser": "^8.0.0",
