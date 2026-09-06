@@ -31,10 +31,7 @@
       "default": "./lib/index.js"
     }
   },
-  "files": [
-    "lib",
-    "docs"
-  ],
+  "files": ["lib", "docs"],
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf lib",
@@ -63,7 +60,7 @@
   },
   "peerDependencies": {
     "@typescript-eslint/parser": "^8.0.0",
-    "eslint": "^10.0.0",
+    "eslint": "^9.0.0 || ^10.0.0",
     "typescript": ">=5.0.0"
   },
   "engines": {
